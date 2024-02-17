@@ -3,28 +3,24 @@ import csv
 import os
 
 app = Flask(__name__)
-lookup_path = 'Classification Results on Face Dataset (1000 images).csv'
-lookup = {}  # Global variable to store CSV data
+lookupPath = 'Classification Results on Face Dataset (1000 images).csv'
+lookup = {}
 
 def read_csv():
     global lookup
-    with open(lookup_path, 'r') as csvFile:
-        csv_reader = csv.reader(csvFile)
-        lookup = {row[0]: row[1] for row in csv_reader}
+    with open(lookupPath, 'r') as csvFile:
+        lookupCsv = csv.reader(csvFile)
+        lookup = {row[0]: row[1] for row in lookupCsv}
 
 read_csv()
 
 @app.route('/', methods=['POST'])
-def classifyImage():
-    print("Received request")
-
+def classify_image():
     try:
         inputFile = request.files['inputFile']
         filename = inputFile.filename
         baseFilename = os.path.splitext(filename)[0]
-
         label = lookup.get(baseFilename)
-        
         if label is not None:
             data = baseFilename+':'+label
             return data, 200
