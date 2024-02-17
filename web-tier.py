@@ -4,15 +4,15 @@ import os
 
 app = Flask(__name__)
 lookup_path = 'Classification Results on Face Dataset (1000 images).csv'
-lookup = {}
+lookup = {}  # Global variable to store CSV data
 
-def readCsv():
+def read_csv():
     global lookup
     with open(lookup_path, 'r') as csvFile:
         csv_reader = csv.reader(csvFile)
         lookup = {row[0]: row[1] for row in csv_reader}
 
-readCsv()
+read_csv()
 
 @app.route('/', methods=['POST'])
 def classifyImage():
@@ -35,5 +35,4 @@ def classifyImage():
         return jsonify({'error': str(e)}), 500
 
 if __name__ == '__main__':
-    app.run(host=os.getenv('PUBLIC_IP', '0.0.0.0'),port=int(os.getenv('PORT', 8888)))
-
+    app.run(host='0.0.0.0', port=8888)
